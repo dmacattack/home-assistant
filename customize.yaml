@@ -1,0 +1,4 @@
+#### rename the wemo switch
+switch.wemo_switch:
+  friendly_name: Front Room Lamp
+  entity_picture: images/lamp.jpg

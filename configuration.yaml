@@ -1,0 +1,223 @@
+homeassistant:
+  name: HomeSlice
+  latitude: <redacted>
+  longitude: <redacted>
+  elevation: <redacted>
+  unit_system: <redacted>
+  time_zone: <redacted>
+
+  customize: !include customize.yaml
+
+
+# Enables the frontend
+frontend:
+
+# Checks for available updates
+updater:
+
+# Discover some devices automatically
+discovery:
+
+# Enables support for tracking state changes over time.
+history:
+
+# View all events in a logbook
+logbook:
+
+# sun state
+sun:
+
+# Text to speech
+tts:
+  platform: google
+
+########################################
+### COMPONENTS
+########################################
+
+# google travel time
+sensor 1:
+  - platform: google_travel_time
+    name: <redacted> to Work
+    api_key: <redacted>
+    origin: zone.Home
+    destination: zone.XYZ
+
+sensor 2:
+  - platform: google_travel_time
+    name: <redacted> to Work
+    api_key: <redacted>
+    origin: zone.Home
+    destination: zone.ABC
+
+sensor 3:
+  - platform: google_travel_time
+    name: <redacted> to Home
+    api_key: <redacted>
+    origin: zone.XYZ
+    destination: zone.Home
+
+sensor 4:
+  - platform: google_travel_time
+    name: <redacted> to Home
+    api_key: <redacted>
+    origin: zone.ABC
+    destination: zone.Home
+
+
+##### ZONES #####
+zone:
+  name: Home
+  latitude: <redacted>
+  longitude: <redacted>
+  radius: 200
+
+zone 1:
+  name: XYZ
+  latitude: <redacted>
+  longitude: <redacted>
+  radius: 200
+
+zone 2:
+  name: ABC
+  latitude: <redacted>
+  longitude: <redacted>
+  radius: 200
+
+# Nest entry
+nest:
+  client_id: <redacted>
+  client_secret: <redacted>
+
+##### CPU & INTERNET STATS #####
+sensor 5:
+  - platform: cpuspeed
+    name: CPU
+
+sensor 6:
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+        arg: /home
+      - type: memory_use_percent
+      - type: processor_use
+
+sensor 7:
+  - platform: fastdotcom
+
+
+##### KODI #####
+media_player:
+  - platform: kodi
+    name: bedroom kodi
+    host: http://192.168.2.168
+
+wemo:
+
+logger:
+
+ffmpeg:
+  ffmpeg_bin: /usr/bin/ffmpeg
+  run_test: True
+
+# camera
+camera:
+  - platform: ffmpeg
+    name: CAM
+    input: tcp://localhost:8500
+    extra_arguments: -q:v 2
+
+
+#Traffic
+  - platform: generic
+    name: Traffic CAM1
+
+  - platform: generic
+    name: Traffic CAM2
+    still_image_url: http://
+
+  - platform: generic
+    name: Traffic CAM3
+    still_image_url: http://
+
+  - platform: generic
+    name: Traffic CAM4
+    still_image_url: http://
+
+
+########################################
+### IMPLEMENTATION
+########################################
+
+climate:
+  - platform: nest
+
+sensor:
+  - platform: nest
+    monitored_conditions:
+      - 'temperature'
+      - 'target'
+
+  - platform: yweather
+    monitored_conditions:
+      - weather
+      - weather_current
+      - temp_min
+      - temp_max
+      - humidity
+      - temperature
+
+
+
+########################################
+### GROUPS
+########################################
+group: !include groups.yaml
+
+########################################
+### automation
+########################################
+
+automation 1:
+  alias: Turn on light when sun sets
+  trigger:
+    platform: sun
+    event: sunset
+  action:
+    service: switch.turn_on
+    entity_id: switch.wemo_switch
+
+automation 2:
+  alias: Turn off light at dogs bedtime
+  trigger:
+    platform: time
+    after: '21:30:00'
+  action:
+    service: switch.turn_off
+    entity_id: switch.wemo_switch
+
+automation 3:
+  alias: Turn on light in the morning 
+  trigger:
+    platform: time
+    after: '05:30:00'
+  condition:
+    condition: time
+    weekday:
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri
+  action:
+    service: switch.turn_on
+    entity_id: switch.wemo_switch
+
+automation 4:
+  alias: Turn off light in the morning
+  trigger:
+    platform: time
+    after: '07:00:00'
+  action:
+    service: switch.turn_off
+    entity_id: switch.wemo_switch

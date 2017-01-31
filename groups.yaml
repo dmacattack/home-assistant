@@ -1,0 +1,62 @@
+########################################
+### GROUPS
+########################################
+home:
+  view: yes
+  name: Home
+  entities:
+    - light.front_room
+    - light.hue_white_lamp_1
+    - switch.wemo_switch
+
+living_room:
+  view: yes
+  name: Living Room
+  entities:
+    - media_player.Chromecast
+    - camera.living_room
+    - group.stats_card
+    - group.nest_card
+
+bedroom:
+  view: yes
+  name: Bedroom
+  entities:
+    - media_player.bedroom_kodi
+
+travel:
+  view: yes
+  name: Travel
+  entities:
+    - camera.Traffic_CAM1
+    - camera.Traffic_CAM2
+    - camera.Traffic_CAM3
+    - camera.Traffic_CAM4
+    - group.drive_times
+
+########## CARDS ###########
+drive_times:
+  name: Driving Times
+  entities: 
+    - sensor.<redacted>_to_work
+    - sensor.<redacted>_to_work
+    - sensor.<redacted>_to_home
+    - sensor.<redacted>_to_home
+
+stats_card:
+  name: stats
+  entities:
+    - sensor.fastcom_download
+    - sensor.cpu
+    - sensor.cpu_use
+    - sensor.disk_use_home
+    - sensor.ram_use
+
+nest_card:
+  name: nest
+  entities:
+    - climate.living_room
+    - sensor.living_room_thermostat_humidity
+    - sensor.living_room_thermostat_hvac_state
+    - sensor.living_room_thermostat_temperature
+    - sensor.living_room_thermostat_target
